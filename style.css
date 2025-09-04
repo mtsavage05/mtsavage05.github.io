@@ -6,7 +6,6 @@ body {
 }
 
 section {
-    color: red;
-    font-size: 25px;
+    display: flex;
 
 }
