@@ -11,6 +11,11 @@ header {
 
 }
 
+h1 {
+    text-align: center;
+    line-height: 100px;
+    margin: 0;
+}
 
 h2 {
     text-align: center;
