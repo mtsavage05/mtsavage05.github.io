@@ -25,6 +25,14 @@ h2 {
 
 }
 
+article {
+    padding: 10px;
+    margin: 10px;
+    background: red;
+
+
+}
+
 section {
     display: flex;
     
