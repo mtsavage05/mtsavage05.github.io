@@ -1,9 +1,16 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    text-align: center;
+    
     
 }
+header {
+    background: red;
+    height: 100px;
+
+
+}
+
 
 h2 {
     text-align: center;
