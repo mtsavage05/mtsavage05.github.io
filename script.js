@@ -13,4 +13,4 @@ function createArtical(name) {
 
 const button = document.querySelector("button");
 
-button.addEventListener("click", createArtical(updateName));
+button.addEventListener("click", createArtical(updateName()));
