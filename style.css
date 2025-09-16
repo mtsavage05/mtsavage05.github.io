@@ -36,6 +36,13 @@ article {
 
 }
 
+button {
+    padding: 10px;
+    margin: 10px;
+    background: red;
+    width: 150px;
+}
+
 section {
     display: flex;
     align-items: center;
