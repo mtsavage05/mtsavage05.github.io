@@ -1,37 +1,73 @@
-/*
-function createParagraph() {
-  const para = document.createElement("button");
-  para.textContent = "You clicked the button!";
-  document.body.appendChild(para);
+
+function addListItemName(text) {
+    var li = document.createElement("li");
+    li.textContent = text;
+
+    var deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = function() {
+        li.remove();
+    };
+
+    li.appendChild(deleteBtn);
+    document.getElementById("itemListName").appendChild(li);
 }
-const buttons = document.querySelectorAll("button");
-for (const button of buttons)
-    button.addEventListener("click",createParagraph );
-*/
+function addListItemDate(text) {
+    var li = document.createElement("li");
+    li.textContent = text;
+
+    var deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    
+    deleteBtn.onclick = function() {
+        li.remove();
+    };
+
+    li.appendChild(deleteBtn);
+    document.getElementById("itemListDate").appendChild(li);
+}
+
+function addListItemStatus(text) {
+    var li = document.createElement("li");
+    li.textContent = text;
+
+    var deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = function() {
+        li.remove();
+    }
+    var changeBtn = document.createElement("button");
+    changeBtn.textContent = "Edit"
+    changeBtn.onclick = function() {
+        li.toggleAttribute('contenteditable');
+    }
+    
+
+    li.appendChild(deleteBtn);
+    li.appendChild(changeBtn);
+    document.getElementById("itemListStatus").appendChild(li);
+}
+
+
 document.getElementById("addBtnName").onclick = function() {
     var text = document.getElementById("userInputName").value;
-    if (text.trim() !== "") { // Check if input is not empty
-        var li = document.createElement("li");
-        li.textContent = text;
-        document.getElementById("itemListName").appendChild(li);
-        document.getElementById("userInputName").value = ""; // Clear the input field
+    if (text.trim() !== "") {
+        addListItemName(text);
+        document.getElementById("userInputName").value = "";
     }
 }
 document.getElementById("addBtnDate").onclick = function() {
     var text = document.getElementById("userInputDate").value;
-    if (text.trim() !== "") { // Check if input is not empty
-        var li = document.createElement("li");
-        li.textContent = text;
-        document.getElementById("itemListDate").appendChild(li);
-        document.getElementById("userInputDate").value = ""; // Clear the input field
+    if (text.trim() !== "") {
+        addListItemDate(text);
+        document.getElementById("userInputDate").value = "";
     }
 }
+
 document.getElementById("addBtnStatus").onclick = function() {
     var text = document.getElementById("userInputStatus").value;
-    if (text.trim() !== "") { // Check if input is not empty
-        var li = document.createElement("li");
-        li.textContent = text;
-        document.getElementById("itemListStatus").appendChild(li);
-        document.getElementById("userInputStatus").value = ""; // Clear the input field
+    if (text.trim() !== "") {
+        addListItemStatus(text);
+        document.getElementById("userInputStatus").value = "";
     }
 }
