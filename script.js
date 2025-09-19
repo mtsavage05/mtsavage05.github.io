@@ -8,6 +8,13 @@ function addListItemName(text) {
     deleteBtn.onclick = function() {
         li.remove();
     };
+    var changeBtn = document.createElement("button");
+    changeBtn.textContent = "Edit"
+    changeBtn.onclick = function() {
+        li.toggleAttribute('contenteditable');
+    }
+    
+    li.appendChild(changeBtn);
 
     li.appendChild(deleteBtn);
     document.getElementById("itemListName").appendChild(li);
@@ -22,6 +29,13 @@ function addListItemDate(text) {
     deleteBtn.onclick = function() {
         li.remove();
     };
+    var changeBtn = document.createElement("button");
+    changeBtn.textContent = "Edit"
+    changeBtn.onclick = function() {
+        li.toggleAttribute('contenteditable');
+    }
+    
+    li.appendChild(changeBtn);
 
     li.appendChild(deleteBtn);
     document.getElementById("itemListDate").appendChild(li);
@@ -42,9 +56,9 @@ function addListItemStatus(text) {
         li.toggleAttribute('contenteditable');
     }
     
-
-    li.appendChild(deleteBtn);
     li.appendChild(changeBtn);
+    li.appendChild(deleteBtn);
+    
     document.getElementById("itemListStatus").appendChild(li);
 }
 
