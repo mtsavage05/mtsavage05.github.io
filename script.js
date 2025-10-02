@@ -94,8 +94,9 @@ function renderResults(todos) {
     apiResultsContainer.innerHTML = "";
     if (todos.length === 0) {
         apiResultsContainer.textContent = "No results"
+        return;
     }
-    todos.array.forEach(item => {
+    todos.forEach(item => {
         const div = document.createElement("div");
         div.textContent = item.todo;
         apiResultsContainer.appendChild(div);
