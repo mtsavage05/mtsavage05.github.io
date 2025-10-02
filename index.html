@@ -11,28 +11,23 @@
         <h1>What to Do When?</h1>
     </header>
 
-    <!--header for table-->
-    <section> 
-        <article>
-            <input type="text" id="userInputName" placeholder="Enter Project Name" />
-            <button id="addBtnName">Add to List</button>
-            <ul id="itemListName"></ul>
-        </article>
-        <article>
-            <input type="text" id="userInputDate" placeholder="Enter Date" />
-            <button id="addBtnDate">Add to List</button>
-            <ul id="itemListDate"></ul>
-        </article>
-        <article>
-            <input type="text" id="userInputStatus" placeholder="Enter Status" />
-            <button id="addBtnStatus">Add to List</button>
-            <ul id="itemListStatus"></ul>
-        </article>
-
+    <!--Search section-->
+    <section id="searchSection"> 
+        <input type="text" id="searchInput" placeholder="Search assignments"/>
+        <button id="searchButton">Search</button>
     </section>
-    <!-- <input type="text" id="userInput" placeholder="Enter text" />
-    <button id="addBtn">Add to List</button>
-    <ul id="itemList"></ul> -->
-    
+
+    <!-- API results-->
+    <section id="apiResults">
+        <h2>API Results</h2>
+        <div id="apiResultsContainer"></div>
+    </section>
+
+    <!-- My assignments-->
+    <section id="myAssignments" >
+        <h2>My assignments</h2>
+        <div id="assignmentsContainer"></div>
+    </section>
+
 </body>
 </html>

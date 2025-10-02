@@ -1,70 +1,37 @@
-body {
-    font-family: sans-serif;
-    margin: 0;
-    background-color: rgb(0, 0, 0);
-    
-    
-}
-header {
-    background: red;
-    height: 100px;
 
-
+header h1 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-h1 {
-    text-align: center;
-    line-height: 100px;
-    margin: 0;
+section h2 {
+  margin-top: 0;
+  border-bottom: 2px solid #333;
+  padding-bottom: 5px;
 }
-
-h2 {
-    text-align: center;
-    color: black;
-    line-height: 50px;
-    margin: 0;
-
-}
-
-article {
-    padding: 10px;
-    margin: 10px;
-    background: red;
-    width: 300px;
-    
-
-
-
-}
-
-p {
-    padding: 10px;
-    margin: 10px;
-    background: red;
-    width: 150px;
-    text-align: center;
-    color: black;
-    line-height: 50px;
-    margin: 0;
-}
-
-
-
 
 button {
-    padding: 2px;
-    margin: 10px;
- 
+  padding: 6px 12px;
+  margin-left: 10px;
+  background-color: #000000;
+  color: white;
+  border-radius: 3px;
 }
 
-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
+
+#apiResultsContainer, #assignmentsContainer {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin: 10px 0;
+  min-height: 150px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
 }
 
-ul {
-    font-size: large;
-    
-
+#searchSection {
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  gap: 10px;               
+  margin: 20px 0;
 }
