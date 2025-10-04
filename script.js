@@ -1,165 +1,164 @@
 
-// function addListItemName(text) {
-//     var li = document.createElement("li");
-//     li.textContent = text;
+// DOM references
+const searchButton = document.getElementById('searchButton');
+const searchInput = document.getElementById('searchInput');
+const apiResultsContainer = document.getElementById('apiResultsContainer');
+const assignmentsContainer = document.getElementById('assignmentsContainer');
 
-//     var deleteBtn = document.createElement("button");
-//     deleteBtn.textContent = "Delete";
-//     deleteBtn.onclick = function() {
-//         li.remove();
-//     };
-//     var changeBtn = document.createElement("button");
-//     changeBtn.textContent = "Edit"
-//     changeBtn.onclick = function() {
-//         li.toggleAttribute('contenteditable');
-//     }
-    
-//     li.appendChild(changeBtn);
+let apiResults = [];
+let myAssignments = [];
 
-//     li.appendChild(deleteBtn);
-//     document.getElementById("itemListName").appendChild(li);
-// }
+// Normalize API todo item shape to app model
+function normalizeTodo(raw) {
+  return {
+    id: `api-${raw.id}`,
+    title: raw.todo,
+    dueDate: generateDueDate(raw.id),
+    status: raw.completed ? "Completed" : "Not Started",
+    source: "api"
+  };
+}
 
-//  function addListItemDate(text) {
-//      var li = document.createElement("li");
-//      li.textContent = text;
+// Generate a due date within next 21 days based on id
+function generateDueDate(id) {
+  const today = new Date();
+  today.setDate(today.getDate() + (id % 21));
+  return today.toISOString().slice(0, 10);
+}
 
-//      var deleteBtn = document.createElement("button");
-//      deleteBtn.textContent = "Delete";
-    
-//      deleteBtn.onclick = function() {
-//          li.remove();
-//      };
-//      var changeBtn = document.createElement("button");
-//      changeBtn.onclick = function() {
-//          li.toggleAttribute('contenteditable');
-//      }
-    
-//      li.appendChild(changeBtn);
-
-//      li.appendChild(deleteBtn);
-//      document.getElementById("itemListDate").appendChild(li);
-//  }
-
-//  function addListItemStatus(text) {
-//      var li = document.createElement("li");
-//      li.textContent = text;
-
-//      var deleteBtn = document.createElement("button");
-//      deleteBtn.textContent = "Delete";
-//      deleteBtn.onclick = function() {
-//          li.remove();
-//      }
-//      var changeBtn = document.createElement("button");
-//      changeBtn.textContent = "Edit"
-//      changeBtn.onclick = function() {
-//          li.toggleAttribute('contenteditable');
-//      }
-    
-//      li.appendChild(changeBtn);
-//      li.appendChild(deleteBtn);
-    
-//      document.getElementById("itemListStatus").appendChild(li);
-//  }
-
-
-// document.getElementById("addBtnName").onclick = function() {
-//     var text = document.getElementById("userInputName").value;
-//     if (text.trim() !== "") {
-//         addListItemName(text);
-//         document.getElementById("userInputName").value = "";
-//     }
-// }
-// document.getElementById("addBtnDate").onclick = function() {
-//     var text = document.getElementById("userInputDate").value;
-//     if (text.trim() !== "") {
-//         addListItemDate(text);
-//         document.getElementById("userInputDate").value = "";
-//     }
-// }
-
-// document.getElementById("addBtnStatus").onclick = function() {
-//     var text = document.getElementById("userInputStatus").value;
-//     if (text.trim() !== "") {
-//         addListItemStatus(text);
-//         document.getElementById("userInputStatus").value = "";
-//     }
-// }
-
-// const searchButton = document.getElementById("searchButton");
-// const apiResultsContainer = document.getElementById("apiResultsContainer");
-
-
-// function renderResults(todos) {
-//     apiResultsContainer.innerHTML = "";
-//     if (todos.length === 0) {
-//         apiResultsContainer.textContent = "No results"
-//         return;
-//     }
-//     todos.forEach(item => {
-//         const div = document.createElement("div");
-//         div.textContent = item.todo;
-//         apiResultsContainer.appendChild(div);
-//     });
-// }
-
-
-// searchButton.addEventListener("click", () => {
-//     const searchInput = document.getElementById("searchInput");
-//     const query = searchInput.value.trim();
-//     if (!query) {
-//         return;
-//     };
-//     apiResultsContainer.textContent = "Loading";
-//     fetch(`https://dummyjson.com/todos/search?q=${encodeURIComponent(query)}&limit=10`)
-//     .then(response => response.json())
-//     .then(data => {
-//         renderResults(data.todos)
-//     })
-//     .catch(error => {
-//         apiResultsContainer.textContent = "Error: " + error.message;
-//     });
-
-// });
-
-
+// Fetch and search API Todos
 searchButton.addEventListener("click", () => {
-  const searchInput = document.getElementById("searchInput");
-  const query = searchInput.value.trim();
+  const query = searchInput.value.trim().toLowerCase();
   if (!query) return;
 
-  apiResultsContainer.textContent = "Loading";
+  apiResultsContainer.textContent = "Loading...";
 
+  // Fetch a batch of todos (e.g., 100)
   fetch(`https://dummyjson.com/todos?limit=100`)
-    .then(response => {
-      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-      return response.json();
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+      return res.json();
     })
     .then(data => {
-      const filteredTodos = data.todos.filter(todo =>
-        todo.todo.toLowerCase().includes(query.toLowerCase())
-      );
-      renderResults(filteredTodos);
+      // Filter results client-side using the search query
+      const filtered = data.todos.filter(todo => todo.todo.toLowerCase().includes(query));
+
+      apiResults = filtered.map(normalizeTodo);
+
+      if (apiResults.length === 0) {
+        apiResultsContainer.textContent = "No results";
+      } else {
+        renderApiResults(apiResults);
+      }
     })
-    .catch(error => {
-      apiResultsContainer.textContent = "Error: " + error.message;
+    .catch(err => {
+      apiResultsContainer.textContent = "Error: " + err.message;
     });
 });
 
-function renderResults(todos) {
-  apiResultsContainer.innerHTML = "";
-  if (!Array.isArray(todos) || todos.length === 0) {
-    apiResultsContainer.textContent = "No results";
-    return;
-  }
+// Render API results with Import buttons
+function renderApiResults(todos) {
+  apiResultsContainer.innerHTML = '';
   todos.forEach(item => {
-    const div = document.createElement("div");
-    div.textContent = item.todo;
+    const div = document.createElement('div');
+    div.className = 'todo-item';
+
+    div.innerHTML = `
+      <strong>${item.title}</strong><br>
+      Due: ${item.dueDate}<br>
+      Status: ${item.status}
+    `;
+
+    const importBtn = document.createElement('button');
+    importBtn.textContent = 'Import';
+    importBtn.disabled = myAssignments.some(a => a.id === item.id);
+    importBtn.addEventListener('click', () => {
+      importAssignment(item);
+      importBtn.disabled = true;
+    });
+
+    div.appendChild(importBtn);
     apiResultsContainer.appendChild(div);
   });
 }
 
+// Import assignment to "My Assignments"
+function importAssignment(item) {
+  myAssignments.push({...item});
+  renderMyAssignments();
+}
 
+// Render "My Assignments" with inline editing, status, delete
+function renderMyAssignments() {
+  assignmentsContainer.innerHTML = '';
+  if (myAssignments.length === 0) {
+    assignmentsContainer.textContent = "No assignments";
+    return;
+  }
 
+  myAssignments.forEach((assignment, index) => {
+    const div = document.createElement('div');
+    div.className = 'assignment-item';
 
-    
+    div.innerHTML = `
+      <input type="text" class="title" value="${assignment.title}" />
+      <input type="date" class="dueDate" value="${assignment.dueDate}"/>
+      <select class="status">
+        <option value="Not Started" ${assignment.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
+        <option value="In Progress" ${assignment.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+        <option value="Completed" ${assignment.status === 'Completed' ? 'selected' : ''}>Completed</option>
+      </select>
+      <button class="delete-btn">Delete</button>
+    `;
+
+    // Editable fields update model
+    div.querySelector('.title').addEventListener('input', e => {
+      assignment.title = e.target.value;
+    });
+
+    div.querySelector('.dueDate').addEventListener('change', e => {
+      assignment.dueDate = e.target.value;
+    });
+
+    div.querySelector('.status').addEventListener('change', e => {
+      assignment.status = e.target.value;
+    });
+
+    // Delete assignment
+    div.querySelector('.delete-btn').addEventListener('click', () => {
+      myAssignments.splice(index, 1);
+      renderMyAssignments();
+      // Optionally re-enable import button in API results
+      renderApiResults(apiResults);
+    });
+
+    assignmentsContainer.appendChild(div);
+  });
+}
+
+// DOM references for user input
+const newTodoInput = document.getElementById('newTodoInput');
+const addTodoBtn = document.getElementById('addTodoBtn');
+
+addTodoBtn.addEventListener('click', () => {
+  const newTodoText = newTodoInput.value.trim();
+  if (!newTodoText) return; // Prevent adding empty todos
+
+  // Create a new assignment object according to the data model
+  const newAssignment = {
+    id: `local-${Date.now()}`, // Unique id based on timestamp
+    title: newTodoText,
+    dueDate: new Date().toISOString().slice(0, 10), // Today’s date in ISO format
+    status: "Not Started",
+    source: "local"
+  };
+
+  // Add this new item to your existing assignments array
+  myAssignments.push(newAssignment);
+
+  // Re-render "My Assignments" to show the new todo
+  renderMyAssignments();
+
+  // Clear input box for convenience
+  newTodoInput.value = '';
+});
