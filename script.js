@@ -132,14 +132,14 @@ searchButton.addEventListener("click", () => {
 
   fetch(`https://dummyjson.com/todos?limit=100`)
     .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
       return response.json();
     })
     .then(data => {
-      console.log('API response data:', data);
-  renderResults(data.todos || []);
+      const filteredTodos = data.todos.filter(todo =>
+        todo.todo.toLowerCase().includes(query.toLowerCase())
+      );
+      renderResults(filteredTodos);
     })
     .catch(error => {
       apiResultsContainer.textContent = "Error: " + error.message;
