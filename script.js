@@ -112,7 +112,7 @@ searchButton.addEventListener("click", () => {
     };
     apiResultsContainer.textContent = "Loading";
     fetch(`https://dummyjson.com/todos/search?q=${encodeURIComponent(query)}&limit=10`)
-    .then(Response => response.json())
+    .then(response => response.json())
     .then(data => {
         renderResults(data.todos)
     })
