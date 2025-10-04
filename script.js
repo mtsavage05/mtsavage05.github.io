@@ -112,12 +112,12 @@ searchButton.addEventListener("click", () => {
     };
     apiResultsContainer.textContent = "Loading";
     fetch(`https://dummyjson.com/todos/search?q=${encodeURIComponent(query)}&limit=10`)
-    .then(Response => Response.json())
+    .then(Response => response.json())
     .then(data => {
         renderResults(data.todos)
     })
     .catch(error => {
-        // catch errors
+        apiResultsContainer.textContent = "Error: " + error.message;
     });
 
 });
