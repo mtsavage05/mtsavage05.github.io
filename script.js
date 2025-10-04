@@ -86,44 +86,78 @@
 //     }
 // }
 
-const searchButton = document.getElementById("searchButton");
-const apiResultsContainer = document.getElementById("apiResultsContainer");
+// const searchButton = document.getElementById("searchButton");
+// const apiResultsContainer = document.getElementById("apiResultsContainer");
 
 
-function renderResults(todos) {
-    apiResultsContainer.innerHTML = "";
-    if (todos.length === 0) {
-        apiResultsContainer.textContent = "No results"
-        return;
-    }
-    todos.forEach(item => {
-        const div = document.createElement("div");
-        div.textContent = item.todo;
-        apiResultsContainer.appendChild(div);
-    });
-}
+// function renderResults(todos) {
+//     apiResultsContainer.innerHTML = "";
+//     if (todos.length === 0) {
+//         apiResultsContainer.textContent = "No results"
+//         return;
+//     }
+//     todos.forEach(item => {
+//         const div = document.createElement("div");
+//         div.textContent = item.todo;
+//         apiResultsContainer.appendChild(div);
+//     });
+// }
+
+
+// searchButton.addEventListener("click", () => {
+//     const searchInput = document.getElementById("searchInput");
+//     const query = searchInput.value.trim();
+//     if (!query) {
+//         return;
+//     };
+//     apiResultsContainer.textContent = "Loading";
+//     fetch(`https://dummyjson.com/todos/search?q=${encodeURIComponent(query)}&limit=10`)
+//     .then(response => response.json())
+//     .then(data => {
+//         renderResults(data.todos)
+//     })
+//     .catch(error => {
+//         apiResultsContainer.textContent = "Error: " + error.message;
+//     });
+
+// });
 
 
 searchButton.addEventListener("click", () => {
-    const searchInput = document.getElementById("searchInput");
-    const query = searchInput.value.trim();
-    if (!query) {
-        return;
-    };
-    apiResultsContainer.textContent = "Loading";
-    fetch(`https://dummyjson.com/todos/search?q=${encodeURIComponent(query)}&limit=10`)
-    .then(response => response.json())
+  const searchInput = document.getElementById("searchInput");
+  const query = searchInput.value.trim();
+  if (!query) return;
+
+  apiResultsContainer.textContent = "Loading";
+
+  fetch(`https://dummyjson.com/todos/search?q=${encodeURIComponent(query)}&limit=10`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
-        renderResults(data.todos)
+      // Use optional chaining and fallback to empty array
+      renderResults(data.todos ?? []);
     })
     .catch(error => {
-        apiResultsContainer.textContent = "Error: " + error.message;
+      apiResultsContainer.textContent = "Error: " + error.message;
     });
-
 });
 
-
-
+function renderResults(todos) {
+  apiResultsContainer.innerHTML = "";
+  if (!todos.length) {
+    apiResultsContainer.textContent = "No results";
+    return;
+  }
+  todos.forEach(item => {
+    const div = document.createElement("div");
+    div.textContent = item.todo;
+    apiResultsContainer.appendChild(div);
+  });
+}
 
 
 
