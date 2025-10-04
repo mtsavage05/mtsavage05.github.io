@@ -138,8 +138,8 @@ searchButton.addEventListener("click", () => {
       return response.json();
     })
     .then(data => {
-      // Use optional chaining and fallback to empty array
-      renderResults(data.todos ?? []);
+      console.log('API response data:', data);
+  renderResults(data.todos || []);
     })
     .catch(error => {
       apiResultsContainer.textContent = "Error: " + error.message;
@@ -148,7 +148,7 @@ searchButton.addEventListener("click", () => {
 
 function renderResults(todos) {
   apiResultsContainer.innerHTML = "";
-  if (!todos.length) {
+  if (!Array.isArray(todos) || todos.length === 0) {
     apiResultsContainer.textContent = "No results";
     return;
   }
