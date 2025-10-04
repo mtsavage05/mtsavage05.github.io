@@ -130,7 +130,7 @@ searchButton.addEventListener("click", () => {
 
   apiResultsContainer.textContent = "Loading";
 
-  fetch(`https://dummyjson.com/todos/search?q=${encodeURIComponent(query)}&limit=10`)
+  fetch(`https://dummyjson.com/todos?limit=100`)
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
