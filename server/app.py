@@ -18,7 +18,7 @@ def health():
 
 @app.route("/api/assignments")
 def get_assignments():
-    return jsonify({"data": assignments, "count": len(assignments)})
+    return jsonify({"data": assignments})
 
 if __name__ == "__main__":
     app.run(debug=True)
