@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Normalize API todo item shape to app model
 
   function normalizeTodo(raw) {
-    return raw; // or process if needed
+    return raw;
   }
 
 
