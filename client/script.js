@@ -14,12 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return raw; // or process if needed
   }
 
-  // Generate a due date within next 21 days based on id
-  function generateDueDate(id) {
-    const today = new Date();
-    today.setDate(today.getDate() + (id % 21));
-    return today.toISOString().slice(0, 10);
-  }
+
 
   // Fetch and search API Todos
   searchButton.addEventListener("click", () => {
