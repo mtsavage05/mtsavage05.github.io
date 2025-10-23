@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+import sqlite3
 from flask_cors import CORS 
 
 app = Flask(__name__)
@@ -19,6 +20,11 @@ def health():
 @app.route("/api/assignments")
 def get_assignments():
     return jsonify({"data": assignments})
+@app.route('/')
+def create_db():
+    conn = sqlite3.connect('mydb.sqlite')
+    conn.close()
+    return 'Database created!'
 
 if __name__ == "__main__":
     app.run(debug=True)
