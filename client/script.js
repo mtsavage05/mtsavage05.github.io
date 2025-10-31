@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let apiResults = [];
   let myAssignments = [];
-
-  // Normalize API todo item shape to app model
+  let statusFilter = "All";
+ 
 
   function normalizeTodo(raw) {
     return raw;
@@ -16,7 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  // Fetch and search API Todos
+  const statusFilterDropdown = document.getElementById('statusFilter');
+  statusFilterDropdown.addEventListener('change', (e) => {
+    statusFilter = e.target.value;
+    renderApiResults(apiResults);
+  });
+
+  
   searchButton.addEventListener("click", () => {
     const query = searchInput.value.trim().toLowerCase();
     if (!query) return;
@@ -30,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return res.json();
       })
       .then(data => {
-        // Filter results client-side using the search query
+        
         const filtered = data.data.filter(assignment => assignment.title.toLowerCase().includes(query));
 
         apiResults = filtered.map(normalizeTodo);
@@ -46,13 +52,22 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   });
 
-  // Render API results with Import buttons
+
   function renderApiResults(todos) {
     apiResultsContainer.innerHTML = '';
-    todos.forEach(item => {
+    let filtered = todos;
+    if (statusFilter !== "All") {
+      filtered = todos.filter(a => a.status === statusFilter);
+    }
+
+    if (!filtered.length) {
+      apiResultsContainer.textContent = "No results";
+      return;
+    }
+
+    filtered.forEach(item => {
       const div = document.createElement('div');
       div.className = 'todo-item';
-
       div.innerHTML = `
         <strong>${item.title}</strong><br>
         Due: ${item.dueDate}<br>
@@ -72,21 +87,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Import assignment to "My Assignments"
+
   function importAssignment(item) {
     myAssignments.push({...item});
     renderMyAssignments();
   }
 
-  // Render "My Assignments" with inline editing, status, delete
+
   function renderMyAssignments() {
     assignmentsContainer.innerHTML = '';
-    if (myAssignments.length === 0) {
-      assignmentsContainer.textContent = "No assignments";
+
+
+    let filtered = myAssignments;
+    if (statusFilter !== "All") {
+      filtered = myAssignments.filter(a => a.status === statusFilter);
+    }
+
+    if (!filtered.length) {
+      assignmentsContainer.textContent = "No assignments to show!";
       return;
     }
 
-    myAssignments.forEach((assignment, index) => {
+    filtered.forEach((assignment, index) => {
       const div = document.createElement('div');
       div.className = 'assignment-item';
 
@@ -101,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="delete-btn">Delete</button>
       `;
 
-      // Editable fields update model
+
       div.querySelector('.title').addEventListener('change', e => {
         fetch(`http://127.0.0.1:5000/api/assignments/${assignment.id}`, {
           method: "PUT",
@@ -110,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(res => res.json())
         .then(updated => {
-          Object.assign(assignment, updated); // update local object with backend data
+          Object.assign(assignment, updated); 
           renderMyAssignments();
         });
       });
@@ -141,14 +163,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      // Delete assignment
+
       div.querySelector('.delete-btn').addEventListener('click', () => {
         fetch(`http://127.0.0.1:5000/api/assignments/${assignment.id}`, {
           method: "DELETE"
         })
         .then(res => {
           if (res.status === 204) {
-            myAssignments.splice(index, 1);           // Remove from local list only on success
+            myAssignments.splice(index, 1);          
             renderMyAssignments();
             renderApiResults(apiResults);
           } else {
@@ -162,14 +184,18 @@ document.addEventListener("DOMContentLoaded", () => {
       assignmentsContainer.appendChild(div);
     });
   }
+    
+  
 
-  // DOM references for user input
+    
+
+
   const newTodoInput = document.getElementById('newTodoInput');
   const addTodoBtn = document.getElementById('addTodoBtn');
 
   addTodoBtn.addEventListener('click', () => {
     const newTodoText = newTodoInput.value.trim();
-    if (!newTodoText) return; // Prevent adding empty todos
+    if (!newTodoText) return; 
 
   const todayIso = new Date().toISOString().slice(0, 10);
 

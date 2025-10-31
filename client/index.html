@@ -17,17 +17,29 @@
     <button id="searchButton">Search</button>
   </section>
 
+  <section id="filterSection" style="text-align:center; margin-bottom: 18px;">
+    <label for="statusFilter">Filter by Status:</label>
+    <select id="statusFilter">
+      <option value="All">All</option>
+      <option value="Not Started">Not Started</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </section>
+
   <!-- API results -->
   <section id="apiResults">
     <h2>To Do List</h2>
     <div id="apiResultsContainer"></div>
   </section>
+  
 
   <!-- User Add Todo section -->
   <section id="addTodoSection">
     <input type="text" id="newTodoInput" placeholder="Add a new todo" />
     <button id="addTodoBtn">Add Todo</button>
   </section>
+
 
   <!-- My assignments -->
   <section id="myAssignments" >
