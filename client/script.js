@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       const importBtn = document.createElement('button');
-      importBtn.textContent = 'Import';
+      importBtn.textContent = 'Edit';
       importBtn.disabled = myAssignments.some(a => a.id === item.id);
       importBtn.addEventListener('click', () => {
         importAssignment(item);
@@ -102,24 +102,61 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       // Editable fields update model
-      div.querySelector('.title').addEventListener('input', e => {
-        assignment.title = e.target.value;
+      div.querySelector('.title').addEventListener('change', e => {
+        fetch(`http://127.0.0.1:5000/api/assignments/${assignment.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: e.target.value })
+        })
+        .then(res => res.json())
+        .then(updated => {
+          Object.assign(assignment, updated); // update local object with backend data
+          renderMyAssignments();
+        });
       });
 
       div.querySelector('.dueDate').addEventListener('change', e => {
-        assignment.dueDate = e.target.value;
+        fetch(`http://127.0.0.1:5000/api/assignments/${assignment.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dueDate: e.target.value })
+        })
+        .then(res => res.json())
+        .then(updated => {
+          Object.assign(assignment, updated);
+          renderMyAssignments();
+        });
       });
 
       div.querySelector('.status').addEventListener('change', e => {
-        assignment.status = e.target.value;
+        fetch(`http://127.0.0.1:5000/api/assignments/${assignment.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: e.target.value })
+        })
+        .then(res => res.json())
+        .then(updated => {
+          Object.assign(assignment, updated);
+          renderMyAssignments();
+        });
       });
 
       // Delete assignment
       div.querySelector('.delete-btn').addEventListener('click', () => {
-        myAssignments.splice(index, 1);
-        renderMyAssignments();
-        // Optionally re-enable import button in API results
-        renderApiResults(apiResults);
+        fetch(`http://127.0.0.1:5000/api/assignments/${assignment.id}`, {
+          method: "DELETE"
+        })
+        .then(res => {
+          if (res.status === 204) {
+            myAssignments.splice(index, 1);           // Remove from local list only on success
+            renderMyAssignments();
+            renderApiResults(apiResults);
+          } else {
+            res.json().then(error => {
+              alert("Delete failed: " + (error.error || "Unknown error"));
+            });
+          }
+        });
       });
 
       assignmentsContainer.appendChild(div);
@@ -134,22 +171,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const newTodoText = newTodoInput.value.trim();
     if (!newTodoText) return; // Prevent adding empty todos
 
-    // Create a new assignment object according to the data model
-    const newAssignment = {
-      id: `local-${Date.now()}`, // Unique id based on timestamp
+  const todayIso = new Date().toISOString().slice(0, 10);
+
+  fetch('http://127.0.0.1:5000/api/assignments', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
       title: newTodoText,
-      dueDate: new Date().toISOString().slice(0, 10), // Today’s date in ISO format
-      status: "Not Started",
-      source: "local"
-    };
-
-    // Add this new item to your existing assignments array
-    myAssignments.push(newAssignment);
-
-    // Re-render "My Assignments" to show the new todo
+      dueDate: todayIso,
+      status: "Not Started"
+    })
+  })
+  .then(res => res.json())
+  .then(newAssignment => {
+    myAssignments.push(newAssignment); 
     renderMyAssignments();
-
-    // Clear input box for convenience
     newTodoInput.value = '';
+  });
+
   });
 });
