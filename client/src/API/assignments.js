@@ -54,5 +54,5 @@ export async function deleteAssignment(id) {
         : "Failed to delete assignment."
     );
   }
-  // No content on success
+
 }

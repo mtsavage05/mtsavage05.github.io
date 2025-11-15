@@ -7,18 +7,18 @@ function AssignmentForm({ onAdd }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // Controlled input handler
+
   function handleChange(e) {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   }
 
-  // Form submit handler
+
   async function handleSubmit(e) {
     e.preventDefault();
     setSaving(true);
     setError("");
-    // Basic client-side validation
+
     if (!form.title.trim()) {
       setError("Title is required.");
       setSaving(false);
@@ -31,7 +31,7 @@ function AssignmentForm({ onAdd }) {
     }
     try {
       await onAdd(form);
-      setForm(initialState); // reset form after successful add
+      setForm(initialState); 
     } catch (err) {
       setError(err.message);
     } finally {

@@ -30,7 +30,7 @@ function App() {
       } catch (err) {
         setError("Failed to load assignments.");
       } finally {
-        setLoading(false); // This always runs no matter success or failure
+        setLoading(false); 
       }
     }
     load();
